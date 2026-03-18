@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/models/heart_rate_sample.dart';
 import '../../../../core/models/vector3_sample.dart';
@@ -38,6 +39,7 @@ class MotionController extends ChangeNotifier {
     notifyListeners();
 
     try {
+      await _ensureRuntimePermissions();
       await _repository.initialize();
       _subscribePhoneStreams();
       _subscribeWatchStreams();
@@ -48,6 +50,29 @@ class MotionController extends ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> _ensureRuntimePermissions() async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+
+    final permissions = <Permission>[
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.locationWhenInUse,
+      Permission.sensors,
+    ];
+
+    final statuses = await permissions.request();
+    final denied = statuses.entries
+        .where((entry) => !entry.value.isGranted)
+        .map((entry) => entry.key.toString())
+        .toList();
+
+    if (denied.isNotEmpty) {
+      _logger.w('Permisos no concedidos: ${denied.join(', ')}');
     }
   }
 

@@ -53,3 +53,16 @@ APK de salida:
 ## Nota sobre tu error de "No supported devices connected"
 Ese error salió porque intentaste correr sin dispositivo Android activo.
 Windows/Chrome aparecían, pero tu proyecto en ese momento no tenía esas plataformas generadas.
+
+## Troubleshooting: reloj conectado pero no detectado
+Si ves el reloj emparejado en Bluetooth del teléfono pero la app no lo detecta:
+
+1. Acepta permisos al abrir la app (Bluetooth, ubicación y sensores).
+2. En Android 12+ verifica manualmente:
+   - Ajustes > Apps > ACV Motion Monitor > Permisos
+   - habilita **Dispositivos cercanos** y **Ubicación**.
+3. Pulsa **Conectar reloj** dentro de la app para refrescar estado.
+4. Si sigue sin detectarse, desactiva/activa Bluetooth del teléfono y vuelve a abrir la app.
+
+> Nota: actualmente la app detecta que hay un reloj Huawei emparejado por nombre Bluetooth.
+> La lectura real de giroscopio/acelerómetro/FC desde Huawei requiere integrar HMS/Health Kit.
