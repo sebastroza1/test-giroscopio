@@ -5,7 +5,7 @@
 - verificar permisos Android para Bluetooth
 - detectar si hay un reloj Huawei emparejado por nombre Bluetooth
 - reflejar ese estado dentro de la app
-- incluir en Android las dependencias HMS base para **Wear Engine**, **Health Kit** y **Huawei ID**
+- incluir en Android la dependencia HMS base de **Wear Engine**
 - exponer `com.huawei.hms.client.appid` mediante `manifestPlaceholders`
 
 ## Qué todavía no funciona
@@ -18,10 +18,9 @@ Este repo todavía no lee datos remotos de:
 En Android ya quedaron añadidos:
 - repositorio Maven de Huawei
 - dependencia `com.huawei.hms:wearengine:5.0.0.300`
-- dependencia `com.huawei.hms:hihealth-base:5.0.0.300`
-- dependencia `com.huawei.hms:hwid:5.0.0.300`
 - `meta-data` de `com.huawei.hms.client.appid`
 - validación nativa para avisar si el `appid` sigue sin configurarse
+- actualización de AGP/Kotlin/Gradle wrapper para alinearlo mejor con los avisos actuales de Flutter
 
 ## Qué te falta configurar en tu máquina
 1. Crear/configurar la app en **AppGallery Connect**.
@@ -29,15 +28,16 @@ En Android ya quedaron añadidos:
 3. Reemplazar `huaweiAppId=0` en `android/gradle.properties` por el APP ID real.
 4. Agregar el archivo `agconnect-services.json` en `android/app/` si tu flujo HMS lo requiere.
 5. Tener HMS Core y Huawei Health instalados/actualizados en el teléfono Huawei usado para pruebas.
-6. Completar la autenticación/autorización de Huawei ID y Health Kit desde código nativo.
-7. Implementar la suscripción real a sensores/eventos del wearable y enviarlos a Flutter por `EventChannel`.
+6. Si luego vas a usar **Health Kit**, agrega una versión de `hihealth-base`/`hwid` que realmente exista en tu entorno Huawei y valida la resolución en Gradle.
+7. Completar la autenticación/autorización Huawei necesaria desde código nativo.
+8. Implementar la suscripción real a sensores/eventos del wearable y enviarlos a Flutter por `EventChannel`.
 
 ## Por qué todavía pueden salir `-`
 Aunque el proyecto ya quedó preparado con dependencias Huawei, el reloj no empezará a mandar datos solo por agregar librerías.
 Todavía hace falta:
 - autorización del usuario
 - configuración AGC/HMS válida
-- código nativo que abra los clientes de Wear Engine / Health Kit
+- código nativo que abra los clientes de Wear Engine (y después, si aplica, Health Kit)
 - listeners que conviertan los datos a los streams actuales de Flutter
 
 ## Referencias oficiales

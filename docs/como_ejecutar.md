@@ -94,3 +94,7 @@ Si en la tarjeta aparece un mensaje sobre **APP ID/agconnect**, configura primer
 - `Conectar reloj`: puede mostrar el Huawei como detectado
 - `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que la integración remota aún no está implementada
 - tarjetas de `Reloj - Giroscopio`, `Reloj - Acelerómetro` y `Reloj - Ritmo cardiaco`: seguirán mostrando `-` hasta que se haga esa integración
+
+## Nota sobre tu error de dependencias Huawei
+El fallo `Could not find com.huawei.hms:hwid:5.0.0.300` venía de una versión inválida que rompía el build.
+Se dejó `Wear Engine` como dependencia HMS activa y la parte de `Health Kit` quedó documentada para integrarse después con una versión realmente resoluble en tu entorno.
