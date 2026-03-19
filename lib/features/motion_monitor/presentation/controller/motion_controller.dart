@@ -35,10 +35,10 @@ class MotionController extends ChangeNotifier {
 
   bool get watchSensorsImplemented {
     switch (watchConnectionState.provider) {
+      case 'ble_generic':
+        return true;
       case 'huawei':
       case 'wearos':
-      case 'ble_generic':
-        return false;
       default:
         return false;
     }
@@ -51,7 +51,7 @@ class MotionController extends ChangeNotifier {
       case 'wearos':
         return 'La integración de sensores de Wear OS todavía no está implementada.';
       case 'ble_generic':
-        return 'La integración BLE genérica todavía no conoce las características GATT del reloj para leer sensores.';
+        return 'BLE genérico intentará extraer al menos ritmo cardiaco si el reloj expone el servicio estándar Heart Rate por GATT. Acelerómetro y giroscopio siguen dependiendo de características no estándar.';
       default:
         return 'La integración de sensores del reloj todavía no está implementada.';
     }

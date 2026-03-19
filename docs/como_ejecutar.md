@@ -93,7 +93,8 @@ Si en la tarjeta aparece un mensaje sobre **APP ID/agconnect**, configura primer
 ### Qué debes esperar ahora mismo
 - `Conectar reloj`: puede mostrar el Huawei como detectado
 - `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que todavía no existe la lógica nativa que abra Wear Engine / Health Kit, autorice al usuario y envíe muestras reales a Flutter
-- tarjetas de `Reloj - Giroscopio`, `Reloj - Acelerómetro` y `Reloj - Ritmo cardiaco`: seguirán mostrando `-` hasta que se haga esa integración
+- `Reloj - Ritmo cardiaco`: ahora puede empezar a mostrar BPM reales si el reloj Huawei expone el servicio BLE estándar Heart Rate (`0x180D` / `0x2A37`)
+- `Reloj - Giroscopio` y `Reloj - Acelerómetro`: probablemente seguirán mostrando `-` hasta integrar características vendor-specific o una ruta más profunda con Wear Engine
 
 ## Nota sobre tu error de dependencias Huawei
 El fallo `Could not find com.huawei.hms:hwid:5.0.0.300` venía de una versión inválida que rompía el build.

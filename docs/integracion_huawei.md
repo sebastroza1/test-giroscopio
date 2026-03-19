@@ -53,3 +53,9 @@ Todavía hace falta:
 - Wear Engine: https://developer.huawei.com/consumer/en/codelab/WearEngine/
 - Wear Engine product page: https://developer.huawei.com/consumer/en/hms/huawei-wearengine/
 - Health Kit: https://developer.huawei.com/consumer/en/codelab/HUAWEIHiHealthCore/
+
+## Extracción real ya intentada en este repo
+- el proveedor `ble_generic` ahora intenta conectarse por GATT a un reloj Huawei emparejado
+- se suscribe al servicio estándar **Heart Rate Measurement** (`0x180D` / `0x2A37`)
+- si el reloj expone ese servicio por BLE, la app puede empezar a recibir BPM reales en Flutter
+- acelerómetro y giroscopio del reloj siguen pendientes porque normalmente requieren características vendor-specific o una integración más profunda con Wear Engine
