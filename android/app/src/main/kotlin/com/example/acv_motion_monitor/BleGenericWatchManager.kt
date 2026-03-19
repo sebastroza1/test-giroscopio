@@ -26,6 +26,7 @@ class BleGenericWatchManager(
     private var bluetoothGatt: BluetoothGatt? = null
     private var heartRateCharacteristic: BluetoothGattCharacteristic? = null
     private var shouldStartHeartRate: Boolean = false
+    private var discoveredServicesSummary: String = ""
 
     private val gyroEventSink = BleSafeEventSink()
     private val accelerometerEventSink = BleSafeEventSink()
@@ -51,6 +52,13 @@ class BleGenericWatchManager(
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 return
+            }
+
+            discoveredServicesSummary = gatt.services.joinToString(separator = "; ") { service ->
+                val characteristicUuids = service.characteristics.joinToString(separator = ",") { characteristic ->
+                    characteristic.uuid.toString()
+                }
+                "${service.uuid}[$characteristicUuids]"
             }
 
             heartRateCharacteristic = gatt
@@ -118,7 +126,10 @@ class BleGenericWatchManager(
             !adapter.isEnabled -> "Bluetooth está apagado"
             !hasBluetoothConnectPermission() -> "Falta permiso BLUETOOTH_CONNECT"
             pairedWatch == null -> "No se encontró reloj Huawei emparejado por BLE"
-            isConnected -> "Conectado por BLE a ${connectedDeviceName ?: pairedWatch.name}; intentando leer Heart Rate estándar"
+            isConnected && heartRateCharacteristic != null ->
+                "Conectado por BLE a ${connectedDeviceName ?: pairedWatch.name}; intentando leer Heart Rate estándar"
+            isConnected && discoveredServicesSummary.isNotBlank() ->
+                "Conectado por BLE a ${connectedDeviceName ?: pairedWatch.name}, pero no apareció Heart Rate estándar. Servicios detectados: $discoveredServicesSummary"
             else -> "Huawei detectado por BLE: ${pairedWatch.name}. Puedes leer FC si el reloj expone el servicio estándar"
         }
 
@@ -152,6 +163,7 @@ class BleGenericWatchManager(
     fun disconnectBleWatch(): Boolean {
         shouldStartHeartRate = false
         heartRateCharacteristic = null
+        discoveredServicesSummary = ""
         bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null

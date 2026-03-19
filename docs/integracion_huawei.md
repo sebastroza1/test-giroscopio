@@ -59,3 +59,22 @@ Todavía hace falta:
 - se suscribe al servicio estándar **Heart Rate Measurement** (`0x180D` / `0x2A37`)
 - si el reloj expone ese servicio por BLE, la app puede empezar a recibir BPM reales en Flutter
 - acelerómetro y giroscopio del reloj siguen pendientes porque normalmente requieren características vendor-specific o una integración más profunda con Wear Engine
+
+
+## Cómo se “expone” Heart Rate Measurement
+No se expone desde Flutter ni desde la app del teléfono.
+Lo tiene que exponer el **firmware del reloj** como servicio GATT estándar (`0x180D` / `0x2A37`).
+La app del teléfono solo puede:
+- conectarse al reloj por BLE
+- descubrir sus servicios GATT
+- suscribirse si encuentra el servicio estándar
+
+Si el reloj no publica ese servicio, no hay nada que “activar” desde la app del teléfono para forzarlo.
+
+## Sobre el giroscopio del reloj
+Según la página oficial de Wear Engine, la gestión de sensores del wearable menciona acelerómetro y ECG/PPG para FC, pero no un servicio estándar de giroscopio desde BLE.
+Por eso, para que el giroscopio del reloj funcione de verdad, normalmente hace falta una de estas dos cosas:
+- una API oficial específica de Huawei que exponga ese sensor
+- o conocer y suscribirse a una característica GATT propietaria del reloj
+
+Con el diagnóstico BLE añadido en este repo, si el reloj se conecta y no aparece Heart Rate estándar, al menos podrás ver qué servicios GATT publica realmente para seguir la integración.
