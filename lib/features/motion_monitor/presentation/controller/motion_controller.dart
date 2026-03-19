@@ -47,7 +47,7 @@ class MotionController extends ChangeNotifier {
   String get watchSensorsStatusMessage {
     switch (watchConnectionState.provider) {
       case 'huawei':
-        return 'El proyecto ya incluye Wear Engine y Health Kit a nivel Gradle, pero todavía no existe la lógica nativa que abra esos SDK, autorice al usuario y envíe muestras reales del reloj hacia Flutter.';
+        return 'El proyecto mantiene Wear Engine y la extracción BLE de FC. Health Kit quedó fuera del build por resolución de dependencias y debe reintegrarse con una versión HMS validada en un dispositivo Huawei.';
       case 'wearos':
         return 'La integración de sensores de Wear OS todavía no está implementada.';
       case 'ble_generic':

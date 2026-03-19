@@ -5,7 +5,7 @@
 - verificar permisos Android para Bluetooth
 - detectar si hay un reloj Huawei emparejado por nombre Bluetooth
 - reflejar ese estado dentro de la app
-- incluir en Android las dependencias HMS base de **Wear Engine**, **Health Kit** y **Huawei ID**
+- incluir en Android la dependencia HMS base de **Wear Engine** y dejar documentada la ruta oficial para Health Kit
 - exponer `com.huawei.hms.client.appid` mediante `manifestPlaceholders`
 
 ## Qué todavía no funciona
@@ -15,7 +15,7 @@ Este repo todavía no lee datos remotos de:
 - ritmo cardiaco del reloj
 
 La razón principal es que todavía **no existe la lógica nativa** que:
-- abra los clientes de Wear Engine / Health Kit
+- abra los clientes de Wear Engine (y luego, si se reintegra, Health Kit)
 - autorice al usuario contra Huawei
 - se suscriba a sensores/datos remotos
 - empuje muestras reales hacia Flutter mediante `EventChannel`
@@ -24,8 +24,7 @@ La razón principal es que todavía **no existe la lógica nativa** que:
 En Android ya quedaron añadidos:
 - repositorio Maven de Huawei
 - dependencia `com.huawei.hms:wearengine:5.0.0.300`
-- dependencia `com.huawei.hms:hihealth-base:+`
-- dependencia `com.huawei.hms:hwid:+`
+- ruta BLE/GATT para Heart Rate estándar (`0x180D` / `0x2A37`)
 - `meta-data` de `com.huawei.hms.client.appid`
 - validación nativa para avisar si el `appid` sigue sin configurarse
 - actualización de AGP/Kotlin/Gradle wrapper para alinearlo mejor con los avisos actuales de Flutter
@@ -36,7 +35,7 @@ En Android ya quedaron añadidos:
 3. Reemplazar `huaweiAppId=0` en `android/gradle.properties` por el APP ID real.
 4. Agregar el archivo `agconnect-services.json` en `android/app/` si tu flujo HMS lo requiere.
 5. Tener HMS Core y Huawei Health instalados/actualizados en el teléfono Huawei usado para pruebas.
-6. Validar en tu máquina qué versiones exactas resolvió Gradle para `hihealth-base` y `hwid` desde el repo de Huawei.
+6. Seguir el codelab oficial de Health Kit para reintroducir esa dependencia con una versión HMS realmente válida en tu entorno Huawei.
 7. Implementar la lógica nativa que abra Wear Engine / Health Kit desde Android.
 8. Completar la autenticación/autorización Huawei necesaria desde código nativo.
 9. Implementar la suscripción real a sensores/eventos del wearable y enviarlos a Flutter por `EventChannel`.
@@ -78,3 +77,8 @@ Por eso, para que el giroscopio del reloj funcione de verdad, normalmente hace f
 - o conocer y suscribirse a una característica GATT propietaria del reloj
 
 Con el diagnóstico BLE añadido en este repo, si el reloj se conecta y no aparece Heart Rate estándar, al menos podrás ver qué servicios GATT publica realmente para seguir la integración.
+
+
+## Nota sobre Health Kit oficial
+El codelab oficial de Huawei Health Kit muestra una ruta de integración basada en `hihealth-base:{version}`, autenticación Huawei ID y `SensorsController`, además de requisitos explícitos de teléfono Huawei/HMS Core y configuración AGC.
+Este repo no deja esa dependencia activada por defecto porque, en tu entorno actual, estaba rompiendo el build durante la resolución de artefactos.

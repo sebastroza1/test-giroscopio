@@ -97,5 +97,5 @@ Si en la tarjeta aparece un mensaje sobre **APP ID/agconnect**, configura primer
 - `Reloj - Giroscopio` y `Reloj - Acelerómetro`: probablemente seguirán mostrando `-` hasta integrar características vendor-specific o una ruta más profunda con Wear Engine
 
 ## Nota sobre tu error de dependencias Huawei
-El fallo `Could not find com.huawei.hms:hwid:5.0.0.300` venía de una versión inválida que rompía el build.
-Se dejó `Wear Engine` como dependencia HMS activa y la parte de `Health Kit` quedó documentada para integrarse después con una versión realmente resoluble en tu entorno.
+Los fallos con `hihealth-base`/`hwid` estaban rompiendo el build en tu entorno.
+Por eso el proyecto mantiene activo `Wear Engine` y la ruta BLE de ritmo cardiaco, mientras que `Health Kit` quedó documentado para reintegrarse más adelante siguiendo el codelab oficial de Huawei con una versión HMS validada.
