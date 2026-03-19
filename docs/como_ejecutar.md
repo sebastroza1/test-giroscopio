@@ -77,11 +77,16 @@ Pero todavía **no** puede:
 - leer ritmo cardiaco del reloj
 
 ### Por qué pasa
-En este repo todavía no existe integración real con:
-- **Huawei Health Kit / HMS** para Huawei Watch / Watch Fit
-- o un flujo BLE/GATT específico con UUIDs reales del dispositivo
+En este repo todavía no existe integración real con una ruta oficial de Huawei para sensores del reloj.
+
+Las opciones más probables son:
+- **Wear Engine**, para capacidades del wearable y sensores gestionados por Huawei
+- **Health Kit**, para datos de salud/actividad autorizados por el usuario
+- o un flujo BLE/GATT específico si el dispositivo expusiera características compatibles
 
 Emparejar el reloj en Bluetooth **no basta** para recibir sensores. Hace falta integrar el SDK/canal de datos correcto del fabricante.
+
+Consulta también `docs/integracion_huawei.md`.
 
 ### Qué debes esperar ahora mismo
 - `Conectar reloj`: puede mostrar el Huawei como detectado
