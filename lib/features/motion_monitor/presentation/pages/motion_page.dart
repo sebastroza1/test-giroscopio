@@ -22,6 +22,11 @@ class MotionPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildConnectionCard(controller),
+                  if (controller.watchConnectionState.connected)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: _buildWatchSensorsInfoCard(controller),
+                    ),
                   const SizedBox(height: 12),
                   _buildSensorCard(
                     title: 'Teléfono - Giroscopio',
@@ -99,6 +104,20 @@ class MotionPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildWatchSensorsInfoCard(MotionController controller) {
+    return Card(
+      color: Colors.amber.shade50,
+      child: ListTile(
+        leading: Icon(
+          Icons.info_outline,
+          color: Colors.amber.shade900,
+        ),
+        title: const Text('Estado de sensores del reloj'),
+        subtitle: Text(controller.watchSensorsStatusMessage),
       ),
     );
   }

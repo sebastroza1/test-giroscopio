@@ -59,7 +59,7 @@ class HuaweiWatchManager(
             adapter == null -> "Bluetooth no disponible en este dispositivo"
             !adapter.isEnabled -> "Bluetooth está apagado"
             !hasBluetoothConnectPermission() -> "Falta permiso BLUETOOTH_CONNECT"
-            pairedWatchName != null -> "Huawei detectado: $pairedWatchName"
+            pairedWatchName != null -> "Huawei detectado por Bluetooth: $pairedWatchName. Sensores remotos aún no integrados."
             else -> "No se encontró un reloj Huawei emparejado"
         }
 

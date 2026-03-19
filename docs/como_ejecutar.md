@@ -64,5 +64,26 @@ Si ves el reloj emparejado en Bluetooth del teléfono pero la app no lo detecta:
 3. Pulsa **Conectar reloj** dentro de la app para refrescar estado.
 4. Si sigue sin detectarse, desactiva/activa Bluetooth del teléfono y vuelve a abrir la app.
 
-> Nota: actualmente la app detecta que hay un reloj Huawei emparejado por nombre Bluetooth.
-> La lectura real de giroscopio/acelerómetro/FC desde Huawei requiere integrar HMS/Health Kit.
+## Troubleshooting: el reloj sí conecta pero los sensores siguen en `-`
+Eso actualmente es esperado con este código.
+
+La app ya puede:
+- detectar que hay un reloj Huawei emparejado por Bluetooth
+- mostrar el estado de conexión dentro de la tarjeta principal
+
+Pero todavía **no** puede:
+- leer giroscopio del reloj
+- leer acelerómetro del reloj
+- leer ritmo cardiaco del reloj
+
+### Por qué pasa
+En este repo todavía no existe integración real con:
+- **Huawei Health Kit / HMS** para Huawei Watch / Watch Fit
+- o un flujo BLE/GATT específico con UUIDs reales del dispositivo
+
+Emparejar el reloj en Bluetooth **no basta** para recibir sensores. Hace falta integrar el SDK/canal de datos correcto del fabricante.
+
+### Qué debes esperar ahora mismo
+- `Conectar reloj`: puede mostrar el Huawei como detectado
+- `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que la integración remota aún no está implementada
+- tarjetas de `Reloj - Giroscopio`, `Reloj - Acelerómetro` y `Reloj - Ritmo cardiaco`: seguirán mostrando `-` hasta que se haga esa integración

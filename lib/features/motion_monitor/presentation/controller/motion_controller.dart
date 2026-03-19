@@ -33,6 +33,30 @@ class MotionController extends ChangeNotifier {
 
   MotionController(this._repository, this._logger);
 
+  bool get watchSensorsImplemented {
+    switch (watchConnectionState.provider) {
+      case 'huawei':
+      case 'wearos':
+      case 'ble_generic':
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  String get watchSensorsStatusMessage {
+    switch (watchConnectionState.provider) {
+      case 'huawei':
+        return 'El reloj Huawei ya puede detectarse por Bluetooth, pero los sensores remotos todavía no están integrados con Huawei Health Kit/HMS.';
+      case 'wearos':
+        return 'La integración de sensores de Wear OS todavía no está implementada.';
+      case 'ble_generic':
+        return 'La integración BLE genérica todavía no conoce las características GATT del reloj para leer sensores.';
+      default:
+        return 'La integración de sensores del reloj todavía no está implementada.';
+    }
+  }
+
   Future<void> initialize() async {
     isLoading = true;
     errorMessage = null;
@@ -139,6 +163,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> connectWatch() async {
     try {
+      errorMessage = null;
       await _repository.connectWatch();
       watchConnectionState = await _repository.getWatchConnectionState();
     } catch (e) {
@@ -149,6 +174,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> disconnectWatch() async {
     try {
+      errorMessage = null;
       await _repository.disconnectWatch();
       watchConnectionState = await _repository.getWatchConnectionState();
     } catch (e) {
@@ -158,7 +184,20 @@ class MotionController extends ChangeNotifier {
   }
 
   Future<void> startAllWatchSensors() async {
+    if (!watchConnectionState.connected) {
+      errorMessage = 'Primero conecta un reloj antes de iniciar sensores.';
+      notifyListeners();
+      return;
+    }
+
+    if (!watchSensorsImplemented) {
+      errorMessage = watchSensorsStatusMessage;
+      notifyListeners();
+      return;
+    }
+
     try {
+      errorMessage = null;
       await _repository.startWatchGyroscope();
       await _repository.startWatchAccelerometer();
       await _repository.startWatchHeartRate();
@@ -170,6 +209,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> stopAllWatchSensors() async {
     try {
+      errorMessage = null;
       await _repository.stopWatchGyroscope();
       await _repository.stopWatchAccelerometer();
       await _repository.stopWatchHeartRate();
