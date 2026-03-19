@@ -47,7 +47,7 @@ class MotionController extends ChangeNotifier {
   String get watchSensorsStatusMessage {
     switch (watchConnectionState.provider) {
       case 'huawei':
-        return 'El reloj Huawei ya se detecta por Bluetooth. Para leer sensores del reloj todavía falta integrar Wear Engine o Health Kit de Huawei.';
+        return 'El proyecto ya incluye Wear Engine y Health Kit a nivel Gradle, pero todavía falta completar autenticación Huawei y la lectura nativa de sensores del reloj.';
       case 'wearos':
         return 'La integración de sensores de Wear OS todavía no está implementada.';
       case 'ble_generic':

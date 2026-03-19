@@ -43,4 +43,6 @@ flutter {
 
 dependencies {
     implementation "com.huawei.hms:wearengine:5.0.0.300"
+    implementation "com.huawei.hms:hihealth-base:+"
+    implementation "com.huawei.hms:hwid:+"
 }

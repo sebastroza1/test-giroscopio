@@ -61,9 +61,9 @@ class HuaweiWatchManager(
             !adapter.isEnabled -> "Bluetooth está apagado"
             !hasBluetoothConnectPermission() -> "Falta permiso BLUETOOTH_CONNECT"
             pairedWatchName != null && !huaweiConfigReady ->
-                "Huawei detectado por Bluetooth: $pairedWatchName. Falta configurar APP ID/agconnect para Wear Engine/Health Kit."
+                "Huawei detectado por Bluetooth: $pairedWatchName. Wear Engine/Health Kit ya están enlazados al proyecto, pero falta configurar APP ID/agconnect."
             pairedWatchName != null ->
-                "Huawei detectado por Bluetooth: $pairedWatchName. Proyecto preparado para Wear Engine/Health Kit; falta completar autenticación y lectura de sensores."
+                "Huawei detectado por Bluetooth: $pairedWatchName. Wear Engine/Health Kit ya están integrados en Gradle; falta completar autenticación y lectura nativa de sensores."
             else -> "No se encontró un reloj Huawei emparejado"
         }
 

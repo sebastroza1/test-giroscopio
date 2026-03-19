@@ -5,7 +5,7 @@
 - verificar permisos Android para Bluetooth
 - detectar si hay un reloj Huawei emparejado por nombre Bluetooth
 - reflejar ese estado dentro de la app
-- incluir en Android la dependencia HMS base de **Wear Engine**
+- incluir en Android las dependencias HMS base de **Wear Engine**, **Health Kit** y **Huawei ID**
 - exponer `com.huawei.hms.client.appid` mediante `manifestPlaceholders`
 
 ## Qué todavía no funciona
@@ -18,6 +18,8 @@ Este repo todavía no lee datos remotos de:
 En Android ya quedaron añadidos:
 - repositorio Maven de Huawei
 - dependencia `com.huawei.hms:wearengine:5.0.0.300`
+- dependencia `com.huawei.hms:hihealth-base:+`
+- dependencia `com.huawei.hms:hwid:+`
 - `meta-data` de `com.huawei.hms.client.appid`
 - validación nativa para avisar si el `appid` sigue sin configurarse
 - actualización de AGP/Kotlin/Gradle wrapper para alinearlo mejor con los avisos actuales de Flutter
@@ -28,7 +30,7 @@ En Android ya quedaron añadidos:
 3. Reemplazar `huaweiAppId=0` en `android/gradle.properties` por el APP ID real.
 4. Agregar el archivo `agconnect-services.json` en `android/app/` si tu flujo HMS lo requiere.
 5. Tener HMS Core y Huawei Health instalados/actualizados en el teléfono Huawei usado para pruebas.
-6. Si luego vas a usar **Health Kit**, agrega una versión de `hihealth-base`/`hwid` que realmente exista en tu entorno Huawei y valida la resolución en Gradle.
+6. Validar en tu máquina qué versiones exactas resolvió Gradle para `hihealth-base` y `hwid` desde el repo de Huawei.
 7. Completar la autenticación/autorización Huawei necesaria desde código nativo.
 8. Implementar la suscripción real a sensores/eventos del wearable y enviarlos a Flutter por `EventChannel`.
 
@@ -37,7 +39,7 @@ Aunque el proyecto ya quedó preparado con dependencias Huawei, el reloj no empe
 Todavía hace falta:
 - autorización del usuario
 - configuración AGC/HMS válida
-- código nativo que abra los clientes de Wear Engine (y después, si aplica, Health Kit)
+- código nativo que abra los clientes de Wear Engine y Health Kit
 - listeners que conviertan los datos a los streams actuales de Flutter
 
 ## Referencias oficiales
