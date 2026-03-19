@@ -92,7 +92,7 @@ Si en la tarjeta aparece un mensaje sobre **APP ID/agconnect**, configura primer
 
 ### Qué debes esperar ahora mismo
 - `Conectar reloj`: puede mostrar el Huawei como detectado
-- `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que la integración remota aún no está implementada
+- `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que todavía no existe la lógica nativa que abra Wear Engine / Health Kit, autorice al usuario y envíe muestras reales a Flutter
 - tarjetas de `Reloj - Giroscopio`, `Reloj - Acelerómetro` y `Reloj - Ritmo cardiaco`: seguirán mostrando `-` hasta que se haga esa integración
 
 ## Nota sobre tu error de dependencias Huawei
