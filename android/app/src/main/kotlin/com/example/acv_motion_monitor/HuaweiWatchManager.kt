@@ -50,6 +50,7 @@ class HuaweiWatchManager(
         val adapter = bluetoothAdapter()
         val available = isHuaweiAvailable()
         val pairedWatchName = if (available) findPairedHuaweiWatchName(adapter) else null
+        val huaweiConfigReady = hasHuaweiAppIdConfigured()
 
         if (pairedWatchName != null) {
             isConnected = true
@@ -59,7 +60,10 @@ class HuaweiWatchManager(
             adapter == null -> "Bluetooth no disponible en este dispositivo"
             !adapter.isEnabled -> "Bluetooth está apagado"
             !hasBluetoothConnectPermission() -> "Falta permiso BLUETOOTH_CONNECT"
-            pairedWatchName != null -> "Huawei detectado por Bluetooth: $pairedWatchName. Para sensores aún falta integrar Wear Engine/Health Kit."
+            pairedWatchName != null && !huaweiConfigReady ->
+                "Huawei detectado por Bluetooth: $pairedWatchName. Falta configurar APP ID/agconnect para Wear Engine/Health Kit."
+            pairedWatchName != null ->
+                "Huawei detectado por Bluetooth: $pairedWatchName. Proyecto preparado para Wear Engine/Health Kit; falta completar autenticación y lectura de sensores."
             else -> "No se encontró un reloj Huawei emparejado"
         }
 
@@ -89,7 +93,7 @@ class HuaweiWatchManager(
     }
 
     fun startHuaweiGyroscope(): Boolean {
-        // TODO: Integración real con Huawei Health Kit/HMS para datos de sensores en vivo.
+        // TODO: Usar Wear Engine/Health Kit ya configurados para registrar sensor remoto si el wearable lo soporta.
         return false
     }
 
@@ -98,7 +102,7 @@ class HuaweiWatchManager(
     }
 
     fun startHuaweiAccelerometer(): Boolean {
-        // TODO: Integración real con Huawei Health Kit/HMS para acelerómetro.
+        // TODO: Usar Wear Engine para acelerómetro remoto del wearable.
         return false
     }
 
@@ -107,7 +111,7 @@ class HuaweiWatchManager(
     }
 
     fun startHuaweiHeartRate(): Boolean {
-        // TODO: Integración real con Huawei Health Kit/HMS para ritmo cardiaco.
+        // TODO: Usar Wear Engine/Health Kit para FC remota autorizada por el usuario.
         return false
     }
 
@@ -162,6 +166,15 @@ class HuaweiWatchManager(
         }
         return context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) ==
             PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun hasHuaweiAppIdConfigured(): Boolean {
+        val applicationInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+        val appId = applicationInfo.metaData?.getString("com.huawei.hms.client.appid")
+        return !appId.isNullOrBlank() && appId != "appid=0"
     }
 
     private fun findPairedHuaweiWatchName(adapter: BluetoothAdapter?): String? {

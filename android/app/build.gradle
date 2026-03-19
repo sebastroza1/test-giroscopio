@@ -4,6 +4,8 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def huaweiAppIdValue = project.findProperty("huaweiAppId") ?: "0"
+
 android {
     namespace = "com.example.acv_motion_monitor"
     compileSdk = flutter.compileSdkVersion
@@ -24,6 +26,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["huaweiAppId"] = huaweiAppIdValue
     }
 
     buildTypes {
@@ -35,4 +38,11 @@ android {
 
 flutter {
     source = "../.."
+}
+
+
+dependencies {
+    implementation "com.huawei.hms:wearengine:5.0.0.300"
+    implementation "com.huawei.hms:hihealth-base:5.0.0.300"
+    implementation "com.huawei.hms:hwid:5.0.0.300"
 }

@@ -88,6 +88,8 @@ Emparejar el reloj en Bluetooth **no basta** para recibir sensores. Hace falta i
 
 Consulta también `docs/integracion_huawei.md`.
 
+Si en la tarjeta aparece un mensaje sobre **APP ID/agconnect**, configura primero `huaweiAppId` en `android/gradle.properties` y añade el archivo Huawei requerido antes de volver a probar.
+
 ### Qué debes esperar ahora mismo
 - `Conectar reloj`: puede mostrar el Huawei como detectado
 - `Iniciar sensores reloj`: ahora mostrará un mensaje indicando que la integración remota aún no está implementada
