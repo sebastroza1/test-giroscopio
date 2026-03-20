@@ -28,10 +28,11 @@ Future<void> setupDependencies() async {
     () => MotionRepositoryImpl(
       phoneProvider: sl<PhoneSensorProvider>(),
       watchProviders: [
+        sl<WatchProvider>(instanceName: 'ble_generic'),
         sl<WatchProvider>(instanceName: 'huawei'),
         sl<WatchProvider>(instanceName: 'wearos'),
-        sl<WatchProvider>(instanceName: 'ble_generic'),
       ],
+      preferredProvider: 'ble_generic',
       logger: sl<Logger>(),
     ),
   );

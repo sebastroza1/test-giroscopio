@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/models/heart_rate_sample.dart';
 import '../../../../core/models/vector3_sample.dart';
@@ -32,12 +33,37 @@ class MotionController extends ChangeNotifier {
 
   MotionController(this._repository, this._logger);
 
+  bool get watchSensorsImplemented {
+    switch (watchConnectionState.provider) {
+      case 'ble_generic':
+        return true;
+      case 'huawei':
+      case 'wearos':
+      default:
+        return false;
+    }
+  }
+
+  String get watchSensorsStatusMessage {
+    switch (watchConnectionState.provider) {
+      case 'huawei':
+        return 'El proyecto mantiene Wear Engine y la extracción BLE de FC. Health Kit quedó fuera del build por resolución de dependencias y debe reintegrarse con una versión HMS validada en un dispositivo Huawei.';
+      case 'wearos':
+        return 'La integración de sensores de Wear OS todavía no está implementada.';
+      case 'ble_generic':
+        return 'BLE genérico intentará extraer al menos ritmo cardiaco si el reloj expone el servicio estándar Heart Rate por GATT. Acelerómetro y giroscopio siguen dependiendo de características no estándar.';
+      default:
+        return 'La integración de sensores del reloj todavía no está implementada.';
+    }
+  }
+
   Future<void> initialize() async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
+      await _ensureRuntimePermissions();
       await _repository.initialize();
       _subscribePhoneStreams();
       _subscribeWatchStreams();
@@ -48,6 +74,29 @@ class MotionController extends ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> _ensureRuntimePermissions() async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+
+    final permissions = <Permission>[
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.locationWhenInUse,
+      Permission.sensors,
+    ];
+
+    final statuses = await permissions.request();
+    final denied = statuses.entries
+        .where((entry) => !entry.value.isGranted)
+        .map((entry) => entry.key.toString())
+        .toList();
+
+    if (denied.isNotEmpty) {
+      _logger.w('Permisos no concedidos: ${denied.join(', ')}');
     }
   }
 
@@ -114,6 +163,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> connectWatch() async {
     try {
+      errorMessage = null;
       await _repository.connectWatch();
       watchConnectionState = await _repository.getWatchConnectionState();
     } catch (e) {
@@ -124,6 +174,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> disconnectWatch() async {
     try {
+      errorMessage = null;
       await _repository.disconnectWatch();
       watchConnectionState = await _repository.getWatchConnectionState();
     } catch (e) {
@@ -133,7 +184,20 @@ class MotionController extends ChangeNotifier {
   }
 
   Future<void> startAllWatchSensors() async {
+    if (!watchConnectionState.connected) {
+      errorMessage = 'Primero conecta un reloj antes de iniciar sensores.';
+      notifyListeners();
+      return;
+    }
+
+    if (!watchSensorsImplemented) {
+      errorMessage = watchSensorsStatusMessage;
+      notifyListeners();
+      return;
+    }
+
     try {
+      errorMessage = null;
       await _repository.startWatchGyroscope();
       await _repository.startWatchAccelerometer();
       await _repository.startWatchHeartRate();
@@ -145,6 +209,7 @@ class MotionController extends ChangeNotifier {
 
   Future<void> stopAllWatchSensors() async {
     try {
+      errorMessage = null;
       await _repository.stopWatchGyroscope();
       await _repository.stopWatchAccelerometer();
       await _repository.stopWatchHeartRate();
